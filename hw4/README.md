@@ -1,3 +1,12 @@
+# Heroes Of Pymoli Data Analysis
+
+## 3 Observable Trends
+* There are more male players than female players 
+    * (about 62.36% more)
+* Most players are between 15 - 24 years old
+    * (players in age range 15-19 and 20-24 together take up about 65.21% of the players)
+* Most of bestselling items are in low price range 
+    * (4 out of top 5 selling item prices range from $1.49 to $2.35)  
 
 
 ```python
@@ -7,17 +16,6 @@ pd.options.display.float_format = '$ {:,.2f}'.format
 # Reading files and create dataframe
 files = ["purchase_data2.json", "purchase_data.json"]
 df = pd.concat([pd.read_json(f) for f in files]).reset_index()
-```
-
-
-```python
-# Part to add "NormalizedPrice" columns
-from sklearn import preprocessing
-
-x = df['Price'].values.astype(float)
-min_max_scaler = preprocessing.MinMaxScaler()
-x_scaled = min_max_scaler.fit_transform(x.reshape(-1, 1))
-df["NormalizedPrice"] = x_scaled
 ```
 
 
@@ -131,7 +129,7 @@ purchaseAnalysis
 ```python
 # Gender Demographics
 genderDemographics = df.groupby("Gender")["SN"].nunique().to_frame(name="Total Count")
-genderDemographics["Percentage of Players"] = round(genderDemographics["Total Count"] / PlayerCount * 100, 2) 
+genderDemographics["Percentage of Players"] = round(genderDemographics["Total Count"] / genderDemographics["Total Count"].sum() * 100, 2) 
 
 # formatting
 del genderDemographics.index.name
@@ -171,17 +169,17 @@ genderDemographics
   <tbody>
     <tr>
       <th>Male</th>
-      <td>81.37 %</td>
+      <td>80.45 %</td>
       <td>498</td>
     </tr>
     <tr>
       <th>Female</th>
-      <td>18.30 %</td>
+      <td>18.09 %</td>
       <td>112</td>
     </tr>
     <tr>
       <th>Other / Non-Disclosed</th>
-      <td>1.47 %</td>
+      <td>1.45 %</td>
       <td>9</td>
     </tr>
   </tbody>
@@ -198,8 +196,7 @@ df_gender = df.groupby("Gender")
 PurchaseCount = df_gender.index.count()
 AveragePrice = df_gender.Price.mean()
 TotalValue = df_gender.Price.sum()
-# NormTotal = df_gender.NormalizedPrice.sum()
-NormTotal = TotalValue / AveragePrice
+NormTotal = TotalValue / PurchaseCount
 
 # formatting
 columns = ["Purchase Count", "Average Price", "Total Purchase Value", "Normalized Totals"]
@@ -250,21 +247,21 @@ purchasingAnalysis_gender
       <td>697</td>
       <td>$ 2.94</td>
       <td>$ 2,052.28</td>
-      <td>$ 697.00</td>
+      <td>$ 2.94</td>
     </tr>
     <tr>
       <th>Female</th>
       <td>149</td>
       <td>$ 2.85</td>
       <td>$ 424.29</td>
-      <td>$ 149.00</td>
+      <td>$ 2.85</td>
     </tr>
     <tr>
       <th>Other / Non-Disclosed</th>
       <td>12</td>
       <td>$ 3.15</td>
       <td>$ 37.86</td>
-      <td>$ 12.00</td>
+      <td>$ 3.15</td>
     </tr>
   </tbody>
 </table>
@@ -279,8 +276,10 @@ bins = [0, 10, 15, 20, 25, 30, 35, 40, 999]
 names = ['<10', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40+']
 df["ageCategory"] = pd.cut(df["Age"], bins, labels=names)
 
-ageDemographics = df["ageCategory"].value_counts().to_frame(name="Total Count")
-ageDemographics["Percentage of Players"] = round(ageDemographics["Total Count"] / PlayerCount * 100, 2)
+df_user = df[["SN", "ageCategory"]].drop_duplicates()
+ageDemographics = df_user["ageCategory"].value_counts().to_frame(name="Total Count")
+
+ageDemographics["Percentage of Players"] = round(ageDemographics["Total Count"] / ageDemographics["Total Count"].sum() * 100, 2)
 
 # formatting
 ageDemographics = ageDemographics.reindex(names)
@@ -319,42 +318,42 @@ ageDemographics
   <tbody>
     <tr>
       <th>&lt;10</th>
-      <td>6.05 %</td>
-      <td>37</td>
+      <td>4.21 %</td>
+      <td>27</td>
     </tr>
     <tr>
       <th>10-14</th>
-      <td>13.40 %</td>
-      <td>82</td>
+      <td>8.89 %</td>
+      <td>57</td>
     </tr>
     <tr>
       <th>15-19</th>
-      <td>33.33 %</td>
-      <td>204</td>
+      <td>24.80 %</td>
+      <td>159</td>
     </tr>
     <tr>
       <th>20-24</th>
-      <td>55.23 %</td>
-      <td>338</td>
+      <td>40.41 %</td>
+      <td>259</td>
     </tr>
     <tr>
       <th>25-29</th>
-      <td>13.07 %</td>
-      <td>80</td>
+      <td>8.74 %</td>
+      <td>56</td>
     </tr>
     <tr>
       <th>30-34</th>
-      <td>10.62 %</td>
-      <td>65</td>
+      <td>7.80 %</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>35-39</th>
-      <td>8.01 %</td>
-      <td>49</td>
+      <td>4.68 %</td>
+      <td>30</td>
     </tr>
     <tr>
       <th>40+</th>
-      <td>0.49 %</td>
+      <td>0.47 %</td>
       <td>3</td>
     </tr>
   </tbody>
@@ -371,7 +370,6 @@ df_age = df.groupby("ageCategory")
 PurchaseCount = df_age.index.count()
 AveragePrice = df_age.Price.mean()
 TotalValue = df_age.Price.sum()
-# NormTotal = df_age.NormalizedPrice.sum()
 NormTotal = TotalValue / PurchaseCount
 
 columns = ["Purchase Count", "Average Purchase Price", "Total Purchase Value", "Normalized Totals"]
@@ -480,7 +478,7 @@ purchasingAnalysis_age
 # Top Spenders
 df_SN = df.groupby("SN")
 
-top_five_SN = df_SN["Price"].sum().nlargest(5).to_frame().rename(columns={"Price":"Total Purchase Value"}).reset_index()
+top_five_SN = df_SN["Price"].sum().nlargest(5).to_frame(name="Total Purchase Value").reset_index()
 purchase_count = df_SN.index.count().to_frame().rename(columns={"index":"Purchase Count"}).reset_index()
 
 topSpenders = top_five_SN.merge(purchase_count)
@@ -568,7 +566,7 @@ topSpenders
 # Most Popular Items
 df_group_item = df.groupby(["Item ID", "Item Name", "Price"])
 
-most_sold_item = df_group_item.index.count().nlargest(5).to_frame().rename(columns={"index":"Purchase Count"}).reset_index()
+most_sold_item = df_group_item.index.count().nlargest(5).to_frame(name="Purchase Count").reset_index()
 value_item = df_group_item.Price.sum().to_frame().rename(columns={"Price":"Total Purchase Value"}).reset_index()
 
 popularItems_sold = most_sold_item.merge(value_item)
