@@ -2,10 +2,7 @@
 ## Pyber Ride Sharing
 
 ### Analysis
-* 1
-* 2
-* 3
-
+* will add soon
 
 ```python
 from matplotlib import pyplot as plt
