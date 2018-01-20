@@ -1,7 +1,10 @@
 ## Social Analytics (News Mood)
 
-### Analysis
-* 1
+### Analysis 
+#### Note: below analysis is based on the data collected at the time the script was run
+* Most Tweets have neutral sentiment score
+* Only New York Times has negative overall tweet polarity score, and others have positive overall tweet polarity but close to neutral
+
 
 ```python
 import tweepy
