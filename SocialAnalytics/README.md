@@ -1,4 +1,4 @@
-## Social Analytics (News Mood)  -  Yeon Sung
+## Social Analytics (News Mood)  -  by Yeon Sung
 
 ### Analysis 
 #### Note: below analysis is based on the data collected at the time the script was run
