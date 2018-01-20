@@ -3,6 +3,7 @@
 ### Analysis 
 #### Note: below analysis is based on the data collected at the time the script was run
 * Most Tweets have neutral sentiment score
+* CBS has the highest score tweet polarity score and scatter graph shows that many of tweets published by CBS has score above 0
 * Only New York Times has negative overall tweet polarity score, and others have positive overall tweet polarity but close to neutral
 
 
