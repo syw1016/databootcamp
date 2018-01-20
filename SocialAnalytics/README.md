@@ -108,7 +108,7 @@ plt.show()
 ```
 
 
-![png](output_4_0.png)
+![png](social_analytics_1.png)
 
 
 
@@ -142,5 +142,5 @@ plt.show()
 ```
 
 
-![png](output_6_0.png)
+![png](social_analytics_2.png)
 
