@@ -143,10 +143,10 @@ ax.set_ylabel('Tweet Polarity')
 ax.set_title('Overall Media Sentiment based on Twitter')
 plt.grid()
 
-fig.savefig('social_analytics_bar.png')
+fig.savefig('social_analytics_2.png')
 plt.show()
 ```
 
 
-![png](social_analytics_2.png)
+![png](social_analytics_bar.png)
 
